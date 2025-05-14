@@ -1,0 +1,13 @@
+/* src/components/ControlPanel.css */
+.control-panel {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.control-panel button {
+  padding: 10px 15px;
+  cursor: pointer;
+}

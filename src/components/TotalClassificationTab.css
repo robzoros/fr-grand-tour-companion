@@ -1,0 +1,68 @@
+/* src/components/TotalClassificationTab.css */
+.total-classification-tab {
+  padding: 15px;
+}
+
+.total-classification-tab h2,
+.total-classification-tab h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.total-classification-tab > div {
+  margin-bottom: 20px; /* Espacio entre las diferentes clasificaciones */
+}
+
+.total-classification-tab > div:last-child {
+  margin-bottom: 0; /* Evitar margen inferior en la última clasificación */
+}
+
+.total-classification-tab table {
+  /* Estilo para todas las tablas dentro del componente */
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px; /* Un poco de espacio superior */
+  margin-bottom: 15px; /* Un poco de espacio inferior entre tablas */
+  background-color: #f8f8f8; /* Fondo claro para las tablas */
+  border-radius: 5px; /* Bordes ligeramente redondeados */
+  overflow: hidden; /* Para que el border-radius funcione con el fondo de las celdas */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Una sombra muy suave */
+}
+
+.total-classification-tab th {
+  background-color: #eee; /* Fondo para los encabezados */
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.total-classification-tab td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.total-classification-tab tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Un fondo ligeramente diferente para filas pares (opcional) */
+}
+
+.total-classification-tab tbody tr:hover {
+  background-color: #e0e0e0; /* Resaltar al pasar el ratón (opcional) */
+}
+
+td.izquierda,
+th.izquierda {
+  text-align: left;
+}
+
+td.centrada {
+  text-align: center;
+}
+
+td.derecha {
+  text-align: right;
+}
+
+.tiempo-total-centered {
+  text-align: center; /* Asegúrate de que esta clase esté definida si la usas */
+}

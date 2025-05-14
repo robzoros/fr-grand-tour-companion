@@ -1,0 +1,56 @@
+/* FinalClassificationTab.module.css */
+
+.classificationTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 0.9em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.classificationTable thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.classificationTable th,
+.classificationTable td {
+  padding: 12px 15px;
+}
+
+.total-parcial {
+  font-weight: bold;
+  color: blue;
+}
+
+.total-final {
+  font-weight: bold;
+  color: brown;
+}
+
+.classificationTable tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.classificationTable tbody tr:nth-child(even) {
+  background-color: #f3f3f3;
+}
+
+.classificationTable tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.classificationTable tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+.tableTitle {
+  margin-bottom: 10px;
+  color: #333;
+}
