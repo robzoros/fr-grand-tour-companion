@@ -9,6 +9,7 @@ function StageTabs({
   equipos,
   resultadosPorEtapa,
   clasificacionesTotales,
+  permisosEscritura,
   activeTab,
   onTabClick,
   onAddTime,
@@ -32,13 +33,15 @@ function StageTabs({
         <div className="stage-content">
           <h2>{activeTab}</h2>
 
+          {permisosEscritura && (
+          <>
           <h3>Gestionar Resultados</h3>
           <div className="results-management">
             {equipos.map((equipo) => (
               <div key={equipo.nombre} className="team-results">
                 <h4>{equipo.nombre}</h4>
                 <ul>
-                  {equipo.corredores.map((corredor) => {
+                  {[equipo.sprinter, equipo.rodador].map((corredor) => {
                     const resultadoEtapa =
                       resultadosEtapaActual?.individual?.find(
                         (r) => r.corredor === corredor.nombre
@@ -79,41 +82,23 @@ function StageTabs({
                         >
                           {corredor.tipo === "sprinter" ? "S" : "R"}
                         </div>
-                        <span className="corredor-nombre">
-                          {corredor.nombre}
-                        </span>
+                        <span className="corredor-nombre">{corredor.nombre}</span>
 
                         <div className="tiempo-control">
                           <label>
                             Tiempo: {Math.floor(tiempoActual / 60)}:
                             {("0" + (tiempoActual % 60)).slice(-2)}
                           </label>
-                          <button
-                            onClick={() =>
-                              handleAddTimeIncrement(corredor.nombre, 10)
-                            }
-                          >
+                          <button onClick={() => handleAddTimeIncrement(corredor.nombre, 10)}>
                             +10s
                           </button>
-                          <button
-                            onClick={() =>
-                              handleAddTimeIncrement(corredor.nombre, -10)
-                            }
-                          >
+                          <button onClick={() => handleAddTimeIncrement(corredor.nombre, -10)}>
                             -10s
                           </button>
-                          <button
-                            onClick={() =>
-                              handleAddTimeIncrement(corredor.nombre, 60)
-                            }
-                          >
+                          <button onClick={() => handleAddTimeIncrement(corredor.nombre, 60)}>
                             +1min
                           </button>
-                          <button
-                            onClick={() =>
-                              handleAddTimeIncrement(corredor.nombre, -60)
-                            }
-                          >
+                          <button onClick={() => handleAddTimeIncrement(corredor.nombre, -60)}>
                             -1min
                           </button>
                         </div>
@@ -122,22 +107,14 @@ function StageTabs({
                           <label>Regularidad: {puntosRegularidad}</label>
                           <button
                             onClick={() =>
-                              handleScoreIncrement(
-                                corredor.nombre,
-                                "regularidad",
-                                1
-                              )
+                              handleScoreIncrement(corredor.nombre, "regularidad", 1)
                             }
                           >
                             +1
                           </button>
                           <button
                             onClick={() =>
-                              handleScoreIncrement(
-                                corredor.nombre,
-                                "regularidad",
-                                -1
-                              )
+                              handleScoreIncrement(corredor.nombre, "regularidad", -1)
                             }
                           >
                             -1
@@ -148,22 +125,14 @@ function StageTabs({
                           <label>Montaña: {puntosMontaña}</label>
                           <button
                             onClick={() =>
-                              handleScoreIncrement(
-                                corredor.nombre,
-                                "montaña",
-                                1
-                              )
+                              handleScoreIncrement(corredor.nombre, "montaña", 1)
                             }
                           >
                             +1
                           </button>
                           <button
                             onClick={() =>
-                              handleScoreIncrement(
-                                corredor.nombre,
-                                "montaña",
-                                -1
-                              )
+                              handleScoreIncrement(corredor.nombre, "montaña", -1)
                             }
                           >
                             -1
@@ -176,6 +145,7 @@ function StageTabs({
               </div>
             ))}
           </div>
+          </>)}
 
           {resultadosEtapaActual?.individual?.length > 0 && (
             <>

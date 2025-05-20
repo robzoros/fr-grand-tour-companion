@@ -5,26 +5,25 @@ function TeamStageClassificationTable({ resultadosEtapa, equipos, title }) {
   const teamResults = {};
 
   // Agrupar los tiempos por equipo
-  equipos.forEach((equipo) => {
-    const tiemposEquipo =
-      resultadosEtapa?.individual
-        ?.filter((resultado) =>
-          equipo.corredores.some(
-            (corredor) => corredor.nombre === resultado.corredor
-          )
-        )
-        ?.map((resultado) => resultado.tiempo)
-        ?.filter((tiempo) => typeof tiempo === "number") || [];
+equipos.forEach((equipo) => {
+  const tiemposEquipo =
+    resultadosEtapa?.individual
+      ?.filter((resultado) =>
+        resultado.corredor === equipo.rodador.nombre ||
+        resultado.corredor === equipo.sprinter.nombre
+      )
+      ?.map((resultado) => resultado.tiempo)
+      ?.filter((tiempo) => typeof tiempo === "number") || [];
 
-    if (tiemposEquipo.length > 0) {
-      teamResults[equipo.nombre] = tiemposEquipo.reduce(
-        (sum, tiempo) => sum + tiempo,
-        0
-      );
-    } else {
-      teamResults[equipo.nombre] = null; // O algún otro valor para indicar que no hay tiempos
-    }
-  });
+  if (tiemposEquipo.length > 0) {
+    teamResults[equipo.nombre] = tiemposEquipo.reduce(
+      (sum, tiempo) => sum + tiempo,
+      0
+    );
+  } else {
+    teamResults[equipo.nombre] = null; // O algún otro valor para indicar que no hay tiempos
+  }
+});
 
   // Convertir el objeto de resultados en un array ordenable
   const clasificacionEquipos = Object.entries(teamResults)
