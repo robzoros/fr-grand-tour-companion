@@ -20,7 +20,7 @@ function IndividualStageClassificationTable({
       <table>
         <thead>
           <tr>
-            <th>Posición</th>
+            <th></th>
             <th>Nombre</th>
             <th>Equipo</th>
             <th className="tiempo-centered">Tiempo</th>

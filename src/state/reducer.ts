@@ -1,15 +1,15 @@
-import { ResultadoEtapa, Action, State, Equipo } from "./definitions"; 
+import { ResultadoEtapa, Action, State, Equipo } from "./definitions";
 
 export const initialState = {
   idSoloLectura: "",
   idPartida: "",
-  permisosEscritura: true, 
+  permisosEscritura: true,
   etapaActual: 0,
   resultadosPorEtapa: {},
   clasificacionesTotales: {
     general: {},
-    regularidad: {},
-    montaña: {},  
+    sprint: {},
+    montaña: {},
     tour: {},
   },
   equipos: [],
@@ -23,7 +23,7 @@ export const initialState = {
     rodador: "",
     sprinter: "",
   },
-  
+
   mostrarFormularioEquipo: false,
   faseCreacionEquipos: true,
   mostrarModalEnlaces: false,
@@ -60,10 +60,14 @@ export function reducer(state: State, action: Action) {
       };
     case "AÑADIR_TIEMPO_CORREDOR": {
       const { etapa, corredorNombre, tiempo } = action.payload;
-      const resultadosPrevios = state.resultadosPorEtapa[etapa] || { individual: [] };
+      const resultadosPrevios = state.resultadosPorEtapa[etapa] || {
+        individual: [],
+      };
       const etapaResultados = { ...resultadosPrevios };
       const individual = [...etapaResultados.individual];
-      const existingIndex = individual.findIndex((r) => r.corredor === corredorNombre);
+      const existingIndex = individual.findIndex(
+        (r) => r.corredor === corredorNombre
+      );
       const now = Date.now();
 
       if (existingIndex > -1) {
@@ -97,7 +101,7 @@ export function reducer(state: State, action: Action) {
       const { etapa, corredorNombre, tipoPunto, puntos } = action.payload;
       const etapaResultados = { ...state.resultadosPorEtapa[etapa] };
       if (!etapaResultados.puntos) {
-        etapaResultados.puntos = { regularidad: [], montaña: [] };
+        etapaResultados.puntos = { sprint: [], montaña: [] };
       }
 
       const puntosArray = [...(etapaResultados.puntos[tipoPunto] || [])];
@@ -161,7 +165,7 @@ export function reducer(state: State, action: Action) {
         .sort(([, a], [, b]) => Number(a) - Number(b))
         .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
 
-      const regularidadFinal = Object.entries(state.clasificacionesTotales.regularidad)
+      const sprintFinal = Object.entries(state.clasificacionesTotales.sprint)
         .sort(([, a], [, b]) => Number(a) - Number(b))
         .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
 
@@ -178,12 +182,11 @@ export function reducer(state: State, action: Action) {
         mostrarClasificacionFinal: true,
         clasificacionesFinales: {
           general: generalFinal,
-          regularidad: regularidadFinal,
+          sprint: sprintFinal,
           montaña: montañaFinal,
           tour: tourFinal,
         },
         activeTab: "Clasificación Final",
-
       };
     }
 
@@ -194,13 +197,12 @@ export function reducer(state: State, action: Action) {
         color,
         rodador: {
           nombre: rodador,
-          tipo: 'rodador',
+          tipo: "rodador",
         },
         sprinter: {
           nombre: sprinter,
-          tipo: 'sprinter',
+          tipo: "sprinter",
         },
-
       };
 
       return {
@@ -210,7 +212,6 @@ export function reducer(state: State, action: Action) {
     }
 
     case "COMENZAR_CAMPEONATO": {
-
       if (state.equipos.length < 2) {
         alert("Debes crear al menos dos equipos para comenzar el campeonato.");
         return state;
@@ -223,7 +224,7 @@ export function reducer(state: State, action: Action) {
         activeTab: "Etapa 1",
         resultadosPorEtapa: {
           ...state.resultadosPorEtapa,
-          1: { individual: [], puntos: { regularidad: [], montaña: [] } },
+          1: { individual: [], puntos: { sprint: [], montaña: [] } },
         },
       };
     }
@@ -237,7 +238,11 @@ export function reducer(state: State, action: Action) {
       }
 
       for (const corredor in puntosTour) {
-        console.log(corredor, nuevosTotales.tour[corredor], puntosTour[corredor]);
+        console.log(
+          corredor,
+          nuevosTotales.tour[corredor],
+          puntosTour[corredor]
+        );
         nuevosTotales.tour[corredor] =
           (nuevosTotales.tour[corredor] || 0) + puntosTour[corredor];
       }
@@ -270,7 +275,7 @@ export function reducer(state: State, action: Action) {
       if (!nuevosResultados[nuevaEtapa]) {
         nuevosResultados[nuevaEtapa] = {
           individual: [],
-          puntos: { regularidad: [], montaña: [] },
+          puntos: { sprint: [], montaña: [] },
         };
       }
 
@@ -337,7 +342,7 @@ export function reducer(state: State, action: Action) {
         ...state,
         mostrarModalEnlaces: false,
       };
-      // Más acciones luego...
+    // Más acciones luego...
     default:
       return state;
   }

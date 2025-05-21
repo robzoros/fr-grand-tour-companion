@@ -6,26 +6,71 @@ export type Action =
   | { type: "MOSTRAR_MODAL_ENLACES" }
   | { type: "OCULTAR_MODAL_ENLACES" }
   | { type: "RETROCEDER_ETAPA" }
-  | { type: "ACTUALIZAR_NUEVO_EQUIPO"; payload: { campo: string; valor: string } }
+  | {
+      type: "ACTUALIZAR_NUEVO_EQUIPO";
+      payload: { campo: string; valor: string };
+    }
   | { type: "TOGGLE_FORMULARIO_EQUIPO" }
   | { type: "CAMBIAR_FASE_CREACION"; payload: boolean }
-  | { type: "ACTUALIZAR_CLASIFICACIONES_TOTALES"; payload: ClasificacionesTotales }
+  | {
+      type: "ACTUALIZAR_CLASIFICACIONES_TOTALES";
+      payload: ClasificacionesTotales;
+    }
   | { type: "ACTUALIZAR_COLORES_DISPONIBLES"; payload: string[] }
-  | { type: "AÑADIR_TIEMPO_CORREDOR"; payload: { etapa: string; corredorNombre: string; tiempo: number } }
-  | { type: "AÑADIR_PUNTOS_CORREDOR"; payload: { etapa: string; corredorNombre: string; tipoPunto: "regularidad" | "montaña"; puntos: number } }
-  | { type: "RESTAR_PUNTOS_CORREDOR"; payload: { etapa: string; corredorNombre: string; tipoPunto: "regularidad" | "montaña"; puntos: number } }
+  | {
+      type: "AÑADIR_TIEMPO_CORREDOR";
+      payload: { etapa: string; corredorNombre: string; tiempo: number };
+    }
+  | {
+      type: "AÑADIR_PUNTOS_CORREDOR";
+      payload: {
+        etapa: string;
+        corredorNombre: string;
+        tipoPunto: "sprint" | "montaña";
+        puntos: number;
+      };
+    }
+  | {
+      type: "RESTAR_PUNTOS_CORREDOR";
+      payload: {
+        etapa: string;
+        corredorNombre: string;
+        tipoPunto: "sprint" | "montaña";
+        puntos: number;
+      };
+    }
   | { type: "FINALIZAR_CAMPEONATO" }
-  | { type: "CREAR_EQUIPO"; payload: { nombre: string; color: string; rodador: string; sprinter: string } }
+  | {
+      type: "CREAR_EQUIPO";
+      payload: {
+        nombre: string;
+        color: string;
+        rodador: string;
+        sprinter: string;
+      };
+    }
   | { type: "COMENZAR_CAMPEONATO" }
-  | { type: "ACTUALIZAR_TOUR_POINTS"; payload: { etapa: string; puntosTour: Record<string, number> } }
-  | { type: "PROCESAR_RESULTADOS_ETAPA"; payload: { etapa: string; resultadosProcesados: ResultadoEtapa } }
+  | {
+      type: "ACTUALIZAR_TOUR_POINTS";
+      payload: { etapa: string; puntosTour: Record<string, number> };
+    }
+  | {
+      type: "PROCESAR_RESULTADOS_ETAPA";
+      payload: { etapa: string; resultadosProcesados: ResultadoEtapa };
+    }
   | { type: "RESETEAR_FORMULARIO_EQUIPO" }
-  | { type: "ACTUALIZAR_NUEVO_EQUIPO"; payload: { campo: string; valor: string } }
-  | { type: "ASIGNAR_IDS_PARTIDA"; payload: { idPartida: string; idSoloLectura: string } };
- 
+  | {
+      type: "ACTUALIZAR_NUEVO_EQUIPO";
+      payload: { campo: string; valor: string };
+    }
+  | {
+      type: "ASIGNAR_IDS_PARTIDA";
+      payload: { idPartida: string; idSoloLectura: string };
+    };
+
 export interface Corredor {
   nombre: string;
-  tipo: 'rodador' | 'sprinter';
+  tipo: "rodador" | "sprinter";
 }
 
 export interface Equipo {
@@ -36,18 +81,27 @@ export interface Equipo {
 }
 
 export interface ResultadoEtapa {
-  individual?: { corredor: string; tiempo: number; ordenLlegada: number | null; ultimoUpdate: number }[];
+  individual?: {
+    corredor: string;
+    tiempo: number;
+    ordenLlegada: number | null;
+    ultimoUpdate: number;
+  }[];
   puntos?: {
-    regularidad?: { corredor: string; puntos: number }[];
+    sprint?: { corredor: string; puntos: number }[];
     montaña?: { corredor: string; puntos: number }[];
   };
   puntosTour?: Record<string, number>;
-  lideresDescanso?: { clasificacion: string; corredor: string; puntos: number }[];
+  lideresDescanso?: {
+    clasificacion: string;
+    corredor: string;
+    puntos: number;
+  }[];
 }
 
 export interface ClasificacionesTotales {
   general: Record<string, { tiempoTotal: number }>;
-  regularidad: Record<string, number>;
+  sprint: Record<string, number>;
   montaña: Record<string, number>;
   tour: Record<string, number>;
 }
@@ -55,7 +109,7 @@ export interface ClasificacionesTotales {
 export interface State {
   idPartida: string;
   idSoloLectura: string;
-  permisosEscritura: boolean
+  permisosEscritura: boolean;
   equipos: Equipo[];
   resultadosPorEtapa: Record<string, ResultadoEtapa>;
   clasificacionesTotales: ClasificacionesTotales;
@@ -69,7 +123,7 @@ export interface State {
     rodador: string;
     sprinter: string;
   };
-  
+
   mostrarClasificacionFinal: boolean;
   mostrarFormularioEquipo: boolean;
   mostrarModalEnlaces: boolean;

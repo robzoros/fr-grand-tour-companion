@@ -3,12 +3,12 @@ export const calcularClasificacionesTotales = (
   resultados,
   tourPoints = {}
 ) => {
-  const totales = { general: {}, regularidad: {}, montaña: {} };
+  const totales = { general: {}, sprint: {}, montaña: {} };
 
   equipos.forEach((equipo) => {
-    [ equipo.rodador, equipo.sprinter ].forEach((corredor) => {
+    [equipo.rodador, equipo.sprinter].forEach((corredor) => {
       totales.general[corredor.nombre] = { tiempoTotal: 0 };
-      totales.regularidad[corredor.nombre] = 0;
+      totales.sprint[corredor.nombre] = 0;
       totales.montaña[corredor.nombre] = 0;
     });
   });
@@ -18,13 +18,14 @@ export const calcularClasificacionesTotales = (
 
     resultadosEtapa?.individual?.forEach((resultado) => {
       if (totales.general[resultado.corredor]) {
-        totales.general[resultado.corredor].tiempoTotal += resultado.tiempo || 0;
+        totales.general[resultado.corredor].tiempoTotal +=
+          resultado.tiempo || 0;
       }
     });
 
-    resultadosEtapa?.puntos?.regularidad?.forEach(({ corredor, puntos }) => {
-      if (totales.regularidad[corredor] !== undefined) {
-        totales.regularidad[corredor] += puntos;
+    resultadosEtapa?.puntos?.sprint?.forEach(({ corredor, puntos }) => {
+      if (totales.sprint[corredor] !== undefined) {
+        totales.sprint[corredor] += puntos;
       }
     });
 
@@ -43,7 +44,7 @@ export const calcularClasificacionesTotales = (
       return obj;
     }, {});
 
-  totales.regularidad = Object.entries(totales.regularidad)
+  totales.sprint = Object.entries(totales.sprint)
     .sort(([, a], [, b]) => b - a)
     .reduce((obj, [key, value]) => {
       obj[key] = value;

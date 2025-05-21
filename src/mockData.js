@@ -41,7 +41,7 @@ export const mockResultadosEtapasFinal = {
       "Líder Verde 1": 1,
     },
     puntos: {
-      regularidad: [
+      sprint: [
         { corredor: "Sprinter Rojo 2", puntos: 5 },
         { corredor: "TodoTerreno Azul 2", puntos: 3 },
       ],
@@ -66,7 +66,7 @@ export const mockResultadosEtapasFinal = {
       "Ayudante Verde 2": 1,
     },
     puntos: {
-      regularidad: [
+      sprint: [
         { corredor: "Sprinter Rojo 2", puntos: 7 },
         { corredor: "TodoTerreno Azul 2", puntos: 5 },
       ],
@@ -84,7 +84,7 @@ export const mockResultadosEtapasFinal = {
     },
     lideresDescanso: [
       { clasificacion: "General", corredor: "Rodador Rojo 1", puntos: 1 },
-      { clasificacion: "Regularidad", corredor: "Sprinter Rojo 2", puntos: 1 },
+      { clasificacion: "sprint", corredor: "Sprinter Rojo 2", puntos: 1 },
       { clasificacion: "Montaña", corredor: "Escalador Azul 1", puntos: 1 },
     ],
   },
@@ -103,7 +103,7 @@ export const mockResultadosEtapasFinal = {
       "Rodador Rojo 1": 1,
     },
     puntos: {
-      regularidad: [
+      sprint: [
         { corredor: "Sprinter Rojo 2", puntos: 3 },
         { corredor: "TodoTerreno Azul 2", puntos: 2 },
       ],
@@ -128,7 +128,7 @@ export const mockResultadosEtapasFinal = {
       "Escalador Azul 1": 1,
     },
     puntos: {
-      regularidad: [
+      sprint: [
         { corredor: "Sprinter Rojo 2", puntos: 4 },
         { corredor: "TodoTerreno Azul 2", puntos: 3 },
       ],
@@ -146,7 +146,7 @@ export const mockResultadosEtapasFinal = {
     },
     lideresDescanso: [
       { clasificacion: "General", corredor: "Rodador Rojo 1", puntos: 1 },
-      { clasificacion: "Regularidad", corredor: "Sprinter Rojo 2", puntos: 1 },
+      { clasificacion: "sprint", corredor: "Sprinter Rojo 2", puntos: 1 },
       { clasificacion: "Montaña", corredor: "Escalador Azul 1", puntos: 1 },
     ],
   },
@@ -165,7 +165,7 @@ export const mockResultadosEtapasFinal = {
       "Rodador Rojo 1": 1,
     },
     puntos: {
-      regularidad: [
+      sprint: [
         { corredor: "Sprinter Rojo 2", puntos: 6 },
         { corredor: "TodoTerreno Azul 2", puntos: 4 },
       ],
@@ -190,7 +190,7 @@ export const mockResultadosEtapasFinal = {
       "Escalador Azul 1": 1,
     },
     puntos: {
-      regularidad: [
+      sprint: [
         { corredor: "Sprinter Rojo 2", puntos: 5 },
         { corredor: "TodoTerreno Azul 2", puntos: 3 },
       ],
@@ -211,7 +211,7 @@ export const mockClasificacionesFinales = {
     "TodoTerreno Azul 2": { tiempoTotal: 21720 },
     "Ayudante Verde 2": { tiempoTotal: 21745 },
   },
-  regularidad: {
+  sprint: {
     "Sprinter Rojo 2": 30,
     "TodoTerreno Azul 2": 17,
     "Ayudante Verde 2": 1,

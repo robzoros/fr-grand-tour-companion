@@ -28,7 +28,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
           <table>
             <thead>
               <tr>
-                <th>Posición</th>
+                <th></th>
                 <th className="izquierda">Nombre</th>
                 <th className="izquierda">Equipo</th>
                 <th className="tiempo-total-centered">Tiempo</th>
@@ -39,7 +39,9 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
               {Object.entries(clasificacionesTotales?.general || {}).map(
                 ([nombre, datos], index) => {
                   const equipoCorredor = equipos.find(
-                    (equipo) => equipo.rodador.nombre === nombre || equipo.sprinter.nombre === nombre
+                    (equipo) =>
+                      equipo.rodador.nombre === nombre ||
+                      equipo.sprinter.nombre === nombre
                   );
 
                   const corredorInfo =
@@ -50,12 +52,14 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                       : undefined;
 
                   const tiempoTotalFormatted = datos?.tiempoTotal
-                    ? `${String(Math.floor(datos.tiempoTotal / 60)).padStart(2, "0")}:${String(
-                        datos.tiempoTotal % 60
-                      ).padStart(2, "0")}`
+                    ? `${String(Math.floor(datos.tiempoTotal / 60)).padStart(
+                        2,
+                        "0"
+                      )}:${String(datos.tiempoTotal % 60).padStart(2, "0")}`
                     : "00:00";
 
-                  const puntosTourCorredor = clasificacionesTotales?.tour?.[nombre] || 0;
+                  const puntosTourCorredor =
+                    clasificacionesTotales?.tour?.[nombre] || 0;
 
                   return (
                     <tr key={nombre}>
@@ -67,7 +71,10 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                             height: "20px",
                             border: "1px solid black",
                             backgroundColor: equipoCorredor?.color,
-                            color: equipoCorredor?.color === "white" ? "black" : "white",
+                            color:
+                              equipoCorredor?.color === "white"
+                                ? "black"
+                                : "white",
                             display: "inline-flex",
                             justifyContent: "center",
                             alignItems: "center",
@@ -78,7 +85,8 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                         >
                           {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
                         </div>
-                      {nombre}</td>
+                        {nombre}
+                      </td>
                       <td>{equipoCorredor?.nombre}</td>
                       <td className="centrada">{tiempoTotalFormatted}</td>
                       <td className="derecha">{puntosTourCorredor}</td>
@@ -96,7 +104,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
           <table>
             <thead>
               <tr>
-                <th>Posición</th>
+                <th></th>
                 <th className="izquierda">Equipo</th>
                 <th>Tiempo</th>
               </tr>
@@ -137,7 +145,8 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                         >
                           T
                         </div>
-                        {nombreEquipo}</td>
+                        {nombreEquipo}
+                      </td>
                       <td className="centrada">
                         {tiempoTotalFormattedEquipos}
                       </td>
@@ -152,57 +161,62 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
 
       <div className="contenedor-tablas">
         <div className="tabla">
-          <h3>Regularidad</h3>
+          <h3>sprint</h3>
           <table>
             <thead>
               <tr>
-                <th>Posición</th>
+                <th></th>
                 <th className="izquierda">Nombre</th>
                 <th className="izquierda">Equipo</th>
                 <th>Puntos</th>
               </tr>
             </thead>
             <tbody>
-              {Object.entries(clasificacionesTotales?.regularidad || {})
+              {Object.entries(clasificacionesTotales?.sprint || {})
                 .sort(([, a], [, b]) => b - a)
                 .map(([nombre, puntos], index) => {
-                  const equipoCorredor = equipos.find((equipo) =>
-                    equipo.rodador.nombre === nombre || equipo.sprinter.nombre === nombre
+                  const equipoCorredor = equipos.find(
+                    (equipo) =>
+                      equipo.rodador.nombre === nombre ||
+                      equipo.sprinter.nombre === nombre
                   );
-                const corredorInfo =
-                  equipoCorredor?.rodador.nombre === nombre
-                    ? equipoCorredor.rodador
-                    : equipoCorredor?.sprinter.nombre === nombre
-                    ? equipoCorredor.sprinter
-                    : undefined;
-                return (
-                  <tr key={nombre}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <div
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          border: "1px solid black",
-                          backgroundColor: equipoCorredor?.color,
-                          color:
-                            equipoCorredor?.color === "white" ? "black" : "white",
-                          display: "inline-flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          fontWeight: "bold",
-                          fontSize: "0.9em",
-                          marginRight: "2%",
-                        }}
-                      >
-                        {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
-                      </div>
-                      {nombre}</td>
-                    <td>{equipoCorredor?.nombre}</td>
-                    <td className="derecha">{puntos}</td>
-                  </tr>
-                );
-              })}
+                  const corredorInfo =
+                    equipoCorredor?.rodador.nombre === nombre
+                      ? equipoCorredor.rodador
+                      : equipoCorredor?.sprinter.nombre === nombre
+                      ? equipoCorredor.sprinter
+                      : undefined;
+                  return (
+                    <tr key={nombre}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <div
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            border: "1px solid black",
+                            backgroundColor: equipoCorredor?.color,
+                            color:
+                              equipoCorredor?.color === "white"
+                                ? "black"
+                                : "white",
+                            display: "inline-flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontWeight: "bold",
+                            fontSize: "0.9em",
+                            marginRight: "2%",
+                          }}
+                        >
+                          {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
+                        </div>
+                        {nombre}
+                      </td>
+                      <td>{equipoCorredor?.nombre}</td>
+                      <td className="derecha">{puntos}</td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
@@ -212,7 +226,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
           <table>
             <thead>
               <tr>
-                <th>Posición</th>
+                <th></th>
                 <th className="izquierda">Nombre</th>
                 <th className="izquierda">Equipo</th>
                 <th>Puntos</th>
@@ -223,7 +237,9 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                 .sort(([, a], [, b]) => b - a)
                 .map(([nombre, puntos], index) => {
                   const equipoCorredor = equipos.find(
-                    (equipo) => equipo.rodador.nombre === nombre || equipo.sprinter.nombre === nombre
+                    (equipo) =>
+                      equipo.rodador.nombre === nombre ||
+                      equipo.sprinter.nombre === nombre
                   );
                   const corredorInfo =
                     equipoCorredor?.rodador.nombre === nombre
@@ -242,7 +258,10 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                             height: "20px",
                             border: "1px solid black",
                             backgroundColor: equipoCorredor?.color,
-                            color: equipoCorredor?.color === "white" ? "black" : "white",
+                            color:
+                              equipoCorredor?.color === "white"
+                                ? "black"
+                                : "white",
                             display: "inline-flex",
                             justifyContent: "center",
                             alignItems: "center",
@@ -253,7 +272,8 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                         >
                           {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
                         </div>
-                        {nombre}</td>
+                        {nombre}
+                      </td>
                       <td>{equipoCorredor?.nombre}</td>
                       <td className="derecha">{puntos}</td>
                     </tr>

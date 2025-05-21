@@ -1,16 +1,21 @@
 import React, { useReducer, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { cargarEstadoFirebase, buscarPartidaSoloLectura } from "./utils/firebaseUtils";
+import {
+  cargarEstadoFirebase,
+  buscarPartidaSoloLectura,
+} from "./utils/firebaseUtils";
 import ControlPanel from "./components/ControlPanel";
 import StageTabs from "./components/StageTabs";
 import TotalClassificationTab from "./components/TotalClassificationTab";
 import FinalClassificationTab from "./components/FinalClassificationTab";
 import { calcularClasificacionesTotales } from "./utils/clasificacionesTotales";
 import { initialState, reducer } from "./state/reducer";
-import { guardarEstadoFirebase } from "./utils/firebaseUtils"
+import { guardarEstadoFirebase } from "./utils/firebaseUtils";
 import "./GestionPartidas.css";
 
-const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> = ({ modoCarga }) => {
+const GestionPartidas: React.FC<{
+  modoCarga: "inicio" | "seguir" | "lectura";
+}> = ({ modoCarga }) => {
   const { id } = useParams();
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -21,15 +26,16 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
         dispatch({ type: "REEMPLAZAR_ESTADO_COMPLETO", payload: initialState });
       } else if (modoCarga === "seguir" && id) {
         const datos = await cargarEstadoFirebase(id, initialState);
-        if (datos) dispatch({ type: "REEMPLAZAR_ESTADO_COMPLETO", payload: datos });
+        if (datos)
+          dispatch({ type: "REEMPLAZAR_ESTADO_COMPLETO", payload: datos });
       } else if (modoCarga === "lectura" && id) {
         const datos = await buscarPartidaSoloLectura(id, initialState);
-        if (datos) dispatch({ type: "REEMPLAZAR_ESTADO_COMPLETO", payload: datos });
+        if (datos)
+          dispatch({ type: "REEMPLAZAR_ESTADO_COMPLETO", payload: datos });
       }
     };
     cargar();
   }, [modoCarga, id]);
-
 
   // Resto de useEffect y lógica, ahora que state ya existe
   useEffect(() => {
@@ -41,10 +47,14 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
       );
 
       const iguales =
-        JSON.stringify(state.clasificacionesTotales) === JSON.stringify(totales);
+        JSON.stringify(state.clasificacionesTotales) ===
+        JSON.stringify(totales);
 
       if (!iguales) {
-        dispatch({ type: "ACTUALIZAR_CLASIFICACIONES_TOTALES", payload: totales });
+        dispatch({
+          type: "ACTUALIZAR_CLASIFICACIONES_TOTALES",
+          payload: totales,
+        });
       }
     }
   }, [
@@ -60,39 +70,39 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
       (color) => !coloresUsados.includes(color)
     );
 
-  const sonIguales =
-    disponibles.length === state.coloresDisponibles.length &&
-    disponibles.every((color, i) => color === state.coloresDisponibles[i]);
+    const sonIguales =
+      disponibles.length === state.coloresDisponibles.length &&
+      disponibles.every((color, i) => color === state.coloresDisponibles[i]);
 
-  if (!sonIguales) {
-    dispatch({
-      type: "ACTUALIZAR_NUEVO_EQUIPO",
-      payload: { campo: "color", valor: disponibles[0] },
-    });
-  }
-
-  const colorActualNoDisponible =
-    !state.nuevoEquipo.color || !disponibles.includes(state.nuevoEquipo.color);
-
-  if (
-    state.mostrarFormularioEquipo &&
-    colorActualNoDisponible &&
-    disponibles.length > 0
-  ) {
-    if (state.nuevoEquipo.color !== disponibles[0]) {
+    if (!sonIguales) {
       dispatch({
         type: "ACTUALIZAR_NUEVO_EQUIPO",
         payload: { campo: "color", valor: disponibles[0] },
       });
     }
-  }
-}, [
-  state.equipos,
-  state.mostrarFormularioEquipo,
-  state.coloresDisponiblesInicial,
-  state.coloresDisponibles,
-]);
 
+    const colorActualNoDisponible =
+      !state.nuevoEquipo.color ||
+      !disponibles.includes(state.nuevoEquipo.color);
+
+    if (
+      state.mostrarFormularioEquipo &&
+      colorActualNoDisponible &&
+      disponibles.length > 0
+    ) {
+      if (state.nuevoEquipo.color !== disponibles[0]) {
+        dispatch({
+          type: "ACTUALIZAR_NUEVO_EQUIPO",
+          payload: { campo: "color", valor: disponibles[0] },
+        });
+      }
+    }
+  }, [
+    state.equipos,
+    state.mostrarFormularioEquipo,
+    state.coloresDisponiblesInicial,
+    state.coloresDisponibles,
+  ]);
 
   const comenzarCampeonato = () => {
     dispatch({ type: "COMENZAR_CAMPEONATO" });
@@ -146,13 +156,14 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
     });
   };
 
-
   const procesarEtapa = (etapa) => {
     const resultadosEtapaAnterior = state.resultadosPorEtapa[etapa];
     if (!resultadosEtapaAnterior) return;
 
-    const resultadosProcesados = asignarOrdenLlegadaYTourPoints(resultadosEtapaAnterior);
-    console.log(resultadosProcesados)
+    const resultadosProcesados = asignarOrdenLlegadaYTourPoints(
+      resultadosEtapaAnterior
+    );
+    console.log(resultadosProcesados);
     dispatch({
       type: "PROCESAR_RESULTADOS_ETAPA",
       payload: {
@@ -195,16 +206,17 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
 
       // Determinar los líderes actuales (después de "avanzar" a la etapa de descanso)
       const liderGeneral = Object.keys(state.clasificacionesTotales.general)[0];
-      const liderMontaña = Object.keys(state.clasificacionesTotales.montaña).sort(
-        (a, b) =>
-          state.clasificacionesTotales.montaña[b] - state.clasificacionesTotales.montaña[a]
-      )[0];
-      const liderRegularidad = Object.keys(
-        state.clasificacionesTotales.regularidad
+      const liderMontaña = Object.keys(
+        state.clasificacionesTotales.montaña
       ).sort(
         (a, b) =>
-          state.clasificacionesTotales.regularidad[b] -
-          state.clasificacionesTotales.regularidad[a]
+          state.clasificacionesTotales.montaña[b] -
+          state.clasificacionesTotales.montaña[a]
+      )[0];
+      const lidersprint = Object.keys(state.clasificacionesTotales.sprint).sort(
+        (a, b) =>
+          state.clasificacionesTotales.sprint[b] -
+          state.clasificacionesTotales.sprint[a]
       )[0];
 
       if (liderGeneral) {
@@ -231,25 +243,24 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
         });
       }
       if (
-        liderRegularidad &&
-        liderRegularidad !== liderGeneral &&
-        liderRegularidad !== liderMontaña
+        lidersprint &&
+        lidersprint !== liderGeneral &&
+        lidersprint !== liderMontaña
       ) {
-        puntosDescanso[liderRegularidad] =
-          (puntosDescanso[liderRegularidad] || 0) + 1;
+        puntosDescanso[lidersprint] = (puntosDescanso[lidersprint] || 0) + 1;
         lideresDescanso.push({
-          clasificacion: "Regularidad",
-          corredor: liderRegularidad,
+          clasificacion: "sprint",
+          corredor: lidersprint,
           puntos: 1,
         });
       } else if (
-        liderRegularidad &&
-        (liderRegularidad === liderGeneral || liderRegularidad === liderMontaña)
+        lidersprint &&
+        (lidersprint === liderGeneral || lidersprint === liderMontaña)
       ) {
-        puntosDescanso[liderRegularidad]++;
+        puntosDescanso[lidersprint]++;
         lideresDescanso.push({
-          clasificacion: "Regularidad",
-          corredor: liderRegularidad,
+          clasificacion: "sprint",
+          corredor: lidersprint,
           puntos: 1,
         });
       }
@@ -316,9 +327,24 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
       return;
     }
 
-    const nombreEquipo = state.nuevoEquipo.nombre || `Equipo ${state.nuevoEquipo.color[0].toUpperCase() + state.nuevoEquipo.color.slice(1)}`;
-    const nombreRodador = state.nuevoEquipo.rodador.trim() || `Rodador ${state.nuevoEquipo.color[0].toUpperCase() + state.nuevoEquipo.color.slice(1)}`;
-    const nombreSprinter = state.nuevoEquipo.sprinter.trim() || `Sprinter ${state.nuevoEquipo.color[0].toUpperCase() + state.nuevoEquipo.color.slice(1)}`;
+    const nombreEquipo =
+      state.nuevoEquipo.nombre ||
+      `Equipo ${
+        state.nuevoEquipo.color[0].toUpperCase() +
+        state.nuevoEquipo.color.slice(1)
+      }`;
+    const nombreRodador =
+      state.nuevoEquipo.rodador.trim() ||
+      `Rodador ${
+        state.nuevoEquipo.color[0].toUpperCase() +
+        state.nuevoEquipo.color.slice(1)
+      }`;
+    const nombreSprinter =
+      state.nuevoEquipo.sprinter.trim() ||
+      `Sprinter ${
+        state.nuevoEquipo.color[0].toUpperCase() +
+        state.nuevoEquipo.color.slice(1)
+      }`;
 
     dispatch({
       type: "CREAR_EQUIPO",
@@ -337,8 +363,10 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
     dispatch({ type: "TOGGLE_FORMULARIO_EQUIPO" });
 
     if (state.mostrarFormularioEquipo) {
-      dispatch({ type: "ACTUALIZAR_NUEVO_EQUIPO", payload: { campo: "color", valor: "" },
-    })
+      dispatch({
+        type: "ACTUALIZAR_NUEVO_EQUIPO",
+        payload: { campo: "color", valor: "" },
+      });
     }
   };
 
@@ -352,11 +380,11 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
       component: (
         <div>
           {state.faseCreacionEquipos && (
-          <button onClick={handleMostrarFormularioEquipo}>
-            {state.mostrarFormularioEquipo
-              ? "Ocultar Formulario Equipo"
-              : "Crear Nuevo Equipo"}
-          </button>
+            <button onClick={handleMostrarFormularioEquipo}>
+              {state.mostrarFormularioEquipo
+                ? "Ocultar Formulario Equipo"
+                : "Crear Nuevo Equipo"}
+            </button>
           )}
 
           {state.mostrarFormularioEquipo && (
@@ -375,7 +403,9 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                 <label htmlFor="nombreEquipo">
                   Nombre del Equipo{" "}
                   <span style={{ color: state.nuevoEquipo.color }}>
-                    {state.nuevoEquipo.color ? `(${state.nuevoEquipo.color})` : ""}
+                    {state.nuevoEquipo.color
+                      ? `(${state.nuevoEquipo.color})`
+                      : ""}
                   </span>
                   :
                 </label>
@@ -390,7 +420,6 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                     })
                   }
                 />
-
               </div>
               <div>
                 <label htmlFor="colorEquipo">Color del Equipo:</label>
@@ -419,7 +448,9 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                 <label htmlFor="nombreRodador">
                   Rodador{" "}
                   <span style={{ color: state.nuevoEquipo.color }}>
-                    {state.nuevoEquipo.color ? `(${state.nuevoEquipo.color})` : ""}
+                    {state.nuevoEquipo.color
+                      ? `(${state.nuevoEquipo.color})`
+                      : ""}
                   </span>
                   :
                 </label>
@@ -427,14 +458,24 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                   type="text"
                   id="nombreRodador"
                   value={state.nuevoEquipo.rodador}
-                  onChange={(e) => dispatch({ type: "ACTUALIZAR_NUEVO_EQUIPO", payload: { campo: "state.nuevoEquipo.rodador", valor: e.target.value },})}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "ACTUALIZAR_NUEVO_EQUIPO",
+                      payload: {
+                        campo: "state.nuevoEquipo.rodador",
+                        valor: e.target.value,
+                      },
+                    })
+                  }
                 />
               </div>
               <div>
                 <label htmlFor="nombreSprinter">
                   Sprinter{" "}
                   <span style={{ color: state.nuevoEquipo.color }}>
-                    {state.nuevoEquipo.color ? `(${state.nuevoEquipo.color})` : ""}
+                    {state.nuevoEquipo.color
+                      ? `(${state.nuevoEquipo.color})`
+                      : ""}
                   </span>
                   :
                 </label>
@@ -442,7 +483,15 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                   type="text"
                   id="nombreSprinter"
                   value={state.nuevoEquipo.sprinter}
-                  onChange={(e) => dispatch({ type: "ACTUALIZAR_NUEVO_EQUIPO", payload: { campo: "state.nuevoEquipo.sprinter", valor: e.target.value },})}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "ACTUALIZAR_NUEVO_EQUIPO",
+                      payload: {
+                        campo: "state.nuevoEquipo.sprinter",
+                        valor: e.target.value,
+                      },
+                    })
+                  }
                 />
               </div>
               <button type="submit">Crear Equipo</button>
@@ -496,7 +545,7 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
             ))}
           </ul>
 
-          {state.equipos.length > 0 && state.faseCreacionEquipos  && (
+          {state.equipos.length > 0 && state.faseCreacionEquipos && (
             <button
               onClick={comenzarCampeonato}
               style={{
@@ -513,30 +562,27 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
     },
   ];
 
-  if (!state.faseCreacionEquipos ) {
+  if (!state.faseCreacionEquipos) {
     for (let i = 1; i <= state.etapaActual; i++) {
       tabs.push({
         name: `Etapa ${i}`,
         component: (
           <StageTabs
             key={i}
-            etapaActual={state.etapaActual}
             equipos={state.equipos}
             resultadosPorEtapa={state.resultadosPorEtapa}
             clasificacionesTotales={state.clasificacionesTotales}
             permisosEscritura={state.permisosEscritura}
             activeTab={state.activeTab}
-            onTabClick={handleTabClick}
             onAddTime={handleAddTime}
             onAddScore={handleAddScore}
-            onSubtractScore={handleSubtractScore}
           />
         ),
       });
 
       // Verificar si hay un descanso asociado a esta etapa para renderizar la pestaña después
-      const descansoDespuesEtapa = Object.keys(state.resultadosPorEtapa).find((key) =>
-        key.startsWith(`Rest ${i} - Descanso`)
+      const descansoDespuesEtapa = Object.keys(state.resultadosPorEtapa).find(
+        (key) => key.startsWith(`Rest ${i} - Descanso`)
       );
       if (descansoDespuesEtapa) {
         const nombrePestanaDescanso =
@@ -548,16 +594,16 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
               <h3>{nombrePestanaDescanso}</h3>
               <h4>Líderes de las clasificaciones y puntos Tour obtenidos:</h4>
               <ul>
-                {state.resultadosPorEtapa[descansoDespuesEtapa]?.lideresDescanso?.map(
-                  (lider) => (
-                    <li
-                      key={`${descansoDespuesEtapa}-${lider.corredor}-${lider.clasificacion}`}
-                    >
-                      <strong>{lider.clasificacion}:</strong> {lider.corredor}{" "}
-                      (TP: {lider.puntos})
-                    </li>
-                  )
-                )}
+                {state.resultadosPorEtapa[
+                  descansoDespuesEtapa
+                ]?.lideresDescanso?.map((lider) => (
+                  <li
+                    key={`${descansoDespuesEtapa}-${lider.corredor}-${lider.clasificacion}`}
+                  >
+                    <strong>{lider.clasificacion}:</strong> {lider.corredor}{" "}
+                    (TP: {lider.puntos})
+                  </li>
+                ))}
               </ul>
             </div>
           ),
@@ -593,13 +639,13 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
   }
   const handleModalEnlaces = () => {
     dispatch({ type: "MOSTRAR_MODAL_ENLACES" });
-  }
+  };
 
   return (
     <div className="app">
       <h1>Campeonato</h1>
 
-      {state.faseCreacionEquipos  ? (
+      {state.faseCreacionEquipos ? (
         <div>
           <div
             style={{
@@ -614,7 +660,7 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                 ? "Ocultar Formulario Equipo"
                 : "Crear Nuevo Equipo"}
             </button>
-            {state.equipos.length > 0 && state.faseCreacionEquipos  && (
+            {state.equipos.length > 0 && state.faseCreacionEquipos && (
               <button
                 onClick={comenzarCampeonato}
                 style={{
@@ -646,7 +692,9 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                 <label htmlFor="nombreEquipo">
                   Nombre del Equipo{" "}
                   <span style={{ color: state.nuevoEquipo.color }}>
-                    {state.nuevoEquipo.color ? `(${state.nuevoEquipo.color})` : ""}
+                    {state.nuevoEquipo.color
+                      ? `(${state.nuevoEquipo.color})`
+                      : ""}
                   </span>
                   :
                 </label>
@@ -657,7 +705,7 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                   onChange={(e) =>
                     dispatch({
                       type: "ACTUALIZAR_NUEVO_EQUIPO",
-                      payload: { campo: "nombre", valor: e.target.value }
+                      payload: { campo: "nombre", valor: e.target.value },
                     })
                   }
                 />
@@ -670,7 +718,7 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                   onChange={(e) =>
                     dispatch({
                       type: "ACTUALIZAR_NUEVO_EQUIPO",
-                      payload: { campo: "color", valor: e.target.value }
+                      payload: { campo: "color", valor: e.target.value },
                     })
                   }
                   required
@@ -689,7 +737,9 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                 <label htmlFor="nombreRodador">
                   Rodador{" "}
                   <span style={{ color: state.nuevoEquipo.color }}>
-                    {state.nuevoEquipo.color ? `(${state.nuevoEquipo.color})` : ""}
+                    {state.nuevoEquipo.color
+                      ? `(${state.nuevoEquipo.color})`
+                      : ""}
                   </span>
                   :
                 </label>
@@ -709,7 +759,9 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                 <label htmlFor="nombreSprinter">
                   Sprinter{" "}
                   <span style={{ color: state.nuevoEquipo.color }}>
-                    {state.nuevoEquipo.color ? `(${state.nuevoEquipo.color})` : ""}
+                    {state.nuevoEquipo.color
+                      ? `(${state.nuevoEquipo.color})`
+                      : ""}
                   </span>
                   :
                 </label>
@@ -780,7 +832,9 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
             <div className="modal-backdrop">
               <div className="modal">
                 <h2>Compartir partida</h2>
-                <p><strong>Permisos de edición:</strong></p>
+                <p>
+                  <strong>Permisos de edición:</strong>
+                </p>
                 <a
                   href={`${window.location.origin}/seguir/${state.idPartida}`}
                   target="_blank"
@@ -789,7 +843,9 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                   {`${window.location.origin}/seguir/${state.idPartida}`}
                 </a>
 
-                <p><strong>Solo lectura:</strong></p>
+                <p>
+                  <strong>Solo lectura:</strong>
+                </p>
                 <a
                   href={`${window.location.origin}/lectura/${state.idSoloLectura}`}
                   target="_blank"
@@ -801,21 +857,28 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
                 <div style={{ marginTop: "1rem" }}>
                   <button
                     onClick={() =>
-                      navigator.clipboard.writeText(`${window.location.origin}/seguir/${state.idPartida}`)
+                      navigator.clipboard.writeText(
+                        `${window.location.origin}/seguir/${state.idPartida}`
+                      )
                     }
                   >
                     Copiar enlace de edición
                   </button>
                   <button
                     onClick={() =>
-                      navigator.clipboard.writeText(`${window.location.origin}/lectura/${state.idSoloLectura}`)
+                      navigator.clipboard.writeText(
+                        `${window.location.origin}/lectura/${state.idSoloLectura}`
+                      )
                     }
                   >
                     Copiar enlace de lectura
                   </button>
                 </div>
 
-                <button style={{ marginTop: "1rem" }} onClick={() => dispatch({ type: "OCULTAR_MODAL_ENLACES" })}>
+                <button
+                  style={{ marginTop: "1rem" }}
+                  onClick={() => dispatch({ type: "OCULTAR_MODAL_ENLACES" })}
+                >
                   Cerrar
                 </button>
               </div>
@@ -838,7 +901,6 @@ const GestionPartidas: React.FC<{ modoCarga: "inicio" | "seguir" | "lectura" }> 
       )}
     </div>
   );
-
-}
+};
 
 export default GestionPartidas;

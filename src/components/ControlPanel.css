@@ -10,4 +10,5 @@
 .control-panel button {
   padding: 10px 15px;
   cursor: pointer;
+  margin-bottom: 10px;
 }

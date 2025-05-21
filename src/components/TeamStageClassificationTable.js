@@ -36,7 +36,7 @@ equipos.forEach((equipo) => {
       <table>
         <thead>
           <tr>
-            <th>Posición</th>
+            <th></th>
             <th>Equipo</th>
             <th>Tiempo</th>
           </tr>
