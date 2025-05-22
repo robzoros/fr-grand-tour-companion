@@ -1,5 +1,6 @@
 import React from "react";
 import "./TotalClassificationTab.css";
+import { getNombreOVacio } from "../utils/funciones";
 
 function TotalClassificationTab({ clasificacionesTotales, equipos }) {
   const clasificacionEquipos = {};
@@ -29,7 +30,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
             <thead>
               <tr>
                 <th></th>
-                <th className="izquierda">Nombre</th>
+                <th className="izquierda">Corredor</th>
                 <th className="izquierda">Equipo</th>
                 <th className="tiempo-total-centered">Tiempo</th>
                 <th>🏆</th>
@@ -85,7 +86,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                         >
                           {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
                         </div>
-                        {nombre}
+                        {getNombreOVacio(nombre)}
                       </td>
                       <td>{equipoCorredor?.nombre}</td>
                       <td className="centrada">{tiempoTotalFormatted}</td>
@@ -145,7 +146,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                         >
                           T
                         </div>
-                        {nombreEquipo}
+                        { getNombreOVacio(nombreEquipo)}
                       </td>
                       <td className="centrada">
                         {tiempoTotalFormattedEquipos}
@@ -166,7 +167,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
             <thead>
               <tr>
                 <th></th>
-                <th className="izquierda">Nombre</th>
+                <th className="izquierda">Corredor</th>
                 <th className="izquierda">Equipo</th>
                 <th>Puntos</th>
               </tr>
@@ -210,7 +211,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                         >
                           {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
                         </div>
-                        {nombre}
+                        {getNombreOVacio(nombre)}
                       </td>
                       <td>{equipoCorredor?.nombre}</td>
                       <td className="derecha">{puntos}</td>
@@ -227,7 +228,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
             <thead>
               <tr>
                 <th></th>
-                <th className="izquierda">Nombre</th>
+                <th className="izquierda">Corredor</th>
                 <th className="izquierda">Equipo</th>
                 <th>Puntos</th>
               </tr>
@@ -272,7 +273,7 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                         >
                           {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
                         </div>
-                        {nombre}
+                        {getNombreOVacio(nombre)}
                       </td>
                       <td>{equipoCorredor?.nombre}</td>
                       <td className="derecha">{puntos}</td>

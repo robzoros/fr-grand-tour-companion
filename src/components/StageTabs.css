@@ -70,6 +70,23 @@
   font-size: 0.8em;
 }
 
+@media (max-width: 600px) {
+  .tiempo-control,
+  .puntos-control {
+    display: flex;
+    flex-direction: row; /* Ya es por defecto, pero lo dejamos explícito */
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .tiempo-control label,
+  .puntos-control label {
+    display: inline-block;
+    width: 80px; /* Igual para todos, alinea los botones */
+    margin-right: 5px;
+  }
+}
+
 /* Para pantallas más grandes, alinear en la misma línea */
 @media (min-width: 600px) {
   .team-results li {

@@ -8,7 +8,7 @@ import ControlPanel from "./components/ControlPanel";
 import StageTabs from "./components/StageTabs";
 import TotalClassificationTab from "./components/TotalClassificationTab";
 import FinalClassificationTab from "./components/FinalClassificationTab";
-import { calcularClasificacionesTotales } from "./utils/clasificacionesTotales";
+import { calcularClasificacionesTotales } from "./utils/funciones";
 import { initialState, reducer } from "./state/reducer";
 import { guardarEstadoFirebase } from "./utils/firebaseUtils";
 import "./GestionPartidas.css";

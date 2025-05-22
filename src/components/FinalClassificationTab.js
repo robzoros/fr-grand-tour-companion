@@ -81,11 +81,11 @@ const FinalClassificationTab = ({
         puntosGeneral = getPuntosClasificacion("general", posicion);
       }
 
-      let puntossprint = 0;
+      let puntosSprint = 0;
       if (clasificacionesFinales?.sprint) {
         const posicion =
           Object.keys(clasificacionesFinales.sprint).indexOf(corredor) + 1;
-        puntossprint = getPuntosClasificacion("sprint", posicion);
+        puntosSprint = getPuntosClasificacion("sprint", posicion);
       }
 
       let puntosMontaña = 0;
@@ -96,12 +96,12 @@ const FinalClassificationTab = ({
       }
 
       const totalPuntosClasificacion =
-        puntosGeneral + puntossprint + puntosMontaña;
+        puntosGeneral + puntosSprint + puntosMontaña;
 
       puntuaciones[corredor] = {
         tpTotal: totalTP,
         puntosGeneral,
-        puntossprint,
+        puntosSprint,
         puntosMontaña,
         totalPuntosClasificacion,
         totalFinal: totalTP + totalPuntosClasificacion,
@@ -273,7 +273,7 @@ const FinalClassificationTab = ({
                 ))}
                 <td className="total-parcial">{puntuacion.tpTotal}</td>
                 <td>{puntuacion.puntosGeneral}</td>
-                <td>{puntuacion.puntossprint}</td>
+                <td>{puntuacion.puntosSprint}</td>
                 <td>{puntuacion.puntosMontaña}</td>
                 <td className="total-parcial">
                   {puntuacion.totalPuntosClasificacion}

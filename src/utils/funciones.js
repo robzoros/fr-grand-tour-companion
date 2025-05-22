@@ -63,3 +63,7 @@ export const calcularClasificacionesTotales = (
     tour: tourPoints || {},
   };
 };
+
+export function getNombreOVacio( nombre ) {
+  return window.innerWidth > 900 ? nombre : "";
+}

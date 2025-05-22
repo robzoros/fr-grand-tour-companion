@@ -1,6 +1,7 @@
 import React from "react";
 import "./IndividualStageClassificationTable.css";
 import type { ResultadoEtapa, Equipo } from "../state/definitions";
+import { getNombreOVacio } from "../utils/funciones";
 
 function IndividualStageClassificationTable({
   resultadosEtapa,
@@ -21,7 +22,7 @@ function IndividualStageClassificationTable({
         <thead>
           <tr>
             <th></th>
-            <th>Nombre</th>
+            <th>Corredor</th>
             <th>Equipo</th>
             <th className="tiempo-centered">Tiempo</th>
           </tr>
@@ -71,8 +72,8 @@ function IndividualStageClassificationTable({
                     }}
                   >
                     {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
+                    <>{getNombreOVacio(resultado.corredor)}</>
                   </div>
-                  {resultado.corredor}
                   {puntosEtapa > 0 && (
                     <span style={{ marginLeft: "5px" }}>🏆 ({puntosEtapa})</span>
                   )}
