@@ -38,7 +38,7 @@ function StageTabs({
                   <div key={equipo.nombre} className="team-results">
                     <h4>{equipo.nombre}</h4>
                     <ul>
-                      {[equipo.sprinter, equipo.rodador].map((corredor) => {
+                      {[equipo.rodador, equipo.sprinter].map((corredor) => {
                         const resultadoEtapa =
                           resultadosEtapaActual?.individual?.find(
                             (r) => r.corredor === corredor.nombre

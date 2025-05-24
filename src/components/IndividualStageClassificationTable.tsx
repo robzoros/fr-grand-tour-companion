@@ -41,16 +41,19 @@ function IndividualStageClassificationTable({
             if (equipoCorredor) {
               if (equipoCorredor.rodador.nombre === resultado.corredor) {
                 corredorInfo = equipoCorredor.rodador;
-              } else if (equipoCorredor.sprinter.nombre === resultado.corredor) {
+              } else if (
+                equipoCorredor.sprinter.nombre === resultado.corredor
+              ) {
                 corredorInfo = equipoCorredor.sprinter;
               }
             }
 
-            const tiempoFormatted = `${Math.floor(resultado.tiempo / 60)}:${String(
-              resultado.tiempo % 60
-            ).padStart(2, "0")}`;
+            const tiempoFormatted = `${Math.floor(
+              resultado.tiempo / 60
+            )}:${String(resultado.tiempo % 60).padStart(2, "0")}`;
 
-            const puntosEtapa = resultadosEtapa?.puntosTour?.[resultado.corredor] || 0;
+            const puntosEtapa =
+              resultadosEtapa?.puntosTour?.[resultado.corredor] || 0;
 
             return (
               <tr key={resultado.corredor}>
@@ -62,7 +65,8 @@ function IndividualStageClassificationTable({
                       height: "20px",
                       border: "1px solid black",
                       backgroundColor: equipoCorredor?.color,
-                      color: equipoCorredor?.color === "white" ? "black" : "white",
+                      color:
+                        equipoCorredor?.color === "white" ? "black" : "white",
                       display: "inline-flex",
                       justifyContent: "center",
                       alignItems: "center",
@@ -72,10 +76,12 @@ function IndividualStageClassificationTable({
                     }}
                   >
                     {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
-                    <>{getNombreOVacio(resultado.corredor)}</>
                   </div>
+                  <>{getNombreOVacio(resultado.corredor)}</>
                   {puntosEtapa > 0 && (
-                    <span style={{ marginLeft: "5px" }}>🏆 ({puntosEtapa})</span>
+                    <span style={{ marginLeft: "5px" }}>
+                      🏆 ({puntosEtapa})
+                    </span>
                   )}
                 </td>
                 <td>{equipoCorredor?.nombre}</td>
@@ -88,6 +94,5 @@ function IndividualStageClassificationTable({
     </div>
   );
 }
-
 
 export default IndividualStageClassificationTable;
