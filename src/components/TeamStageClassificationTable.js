@@ -1,5 +1,6 @@
 import React from "react";
 import "./TeamStageClassificationTable.css";
+import { getNombreOVacio } from "../utils/funciones";
 
 function TeamStageClassificationTable({ resultadosEtapa, equipos, title }) {
   const teamResults = {};
@@ -8,10 +9,10 @@ function TeamStageClassificationTable({ resultadosEtapa, equipos, title }) {
   equipos.forEach((equipo) => {
     const tiemposEquipo =
       resultadosEtapa?.individual
-        ?.filter((resultado) =>
-          equipo.corredores.some(
-            (corredor) => corredor.nombre === resultado.corredor
-          )
+        ?.filter(
+          (resultado) =>
+            resultado.corredor === equipo.rodador.nombre ||
+            resultado.corredor === equipo.sprinter.nombre
         )
         ?.map((resultado) => resultado.tiempo)
         ?.filter((tiempo) => typeof tiempo === "number") || [];
@@ -37,7 +38,7 @@ function TeamStageClassificationTable({ resultadosEtapa, equipos, title }) {
       <table>
         <thead>
           <tr>
-            <th>Posición</th>
+            <th></th>
             <th>Equipo</th>
             <th>Tiempo</th>
           </tr>
@@ -70,7 +71,7 @@ function TeamStageClassificationTable({ resultadosEtapa, equipos, title }) {
                 >
                   T{" "}
                 </div>
-                {nombreEquipo}
+                {getNombreOVacio(nombreEquipo)}
               </td>
               <td>
                 {tiempoTotal !== null

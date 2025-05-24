@@ -8,10 +8,14 @@ const FinalClassificationTab = ({
   numeroEtapas,
 }) => {
   const allCorredores = Array.from(
-    new Set(equipos.flatMap((equipo) => equipo.corredores.map((c) => c.nombre)))
+    new Set(
+      equipos.flatMap((equipo) =>
+        [equipo.rodador, equipo.sprinter].map((c) => c.nombre)
+      )
+    )
   );
-  const etapas = Object.keys(resultadosPorEtapa).filter((key) =>
-    key.startsWith("Etapa ")
+  const etapas = Object.keys(resultadosPorEtapa).filter(
+    (key) => !key.startsWith("Rest")
   );
   const descansos = Object.keys(resultadosPorEtapa).filter((key) =>
     key.startsWith("Rest ")
@@ -23,7 +27,7 @@ const FinalClassificationTab = ({
       "8-14": [4, 3, 2, 1],
       "15-21": [5, 4, 3, 2, 1],
     },
-    regularidad: {
+    sprint: {
       "3-7": [2, 1],
       "8-14": [3, 2, 1],
       "15-21": [4, 3, 2, 1],
@@ -77,11 +81,11 @@ const FinalClassificationTab = ({
         puntosGeneral = getPuntosClasificacion("general", posicion);
       }
 
-      let puntosRegularidad = 0;
-      if (clasificacionesFinales?.regularidad) {
+      let puntosSprint = 0;
+      if (clasificacionesFinales?.sprint) {
         const posicion =
-          Object.keys(clasificacionesFinales.regularidad).indexOf(corredor) + 1;
-        puntosRegularidad = getPuntosClasificacion("regularidad", posicion);
+          Object.keys(clasificacionesFinales.sprint).indexOf(corredor) + 1;
+        puntosSprint = getPuntosClasificacion("sprint", posicion);
       }
 
       let puntosMontaña = 0;
@@ -92,12 +96,12 @@ const FinalClassificationTab = ({
       }
 
       const totalPuntosClasificacion =
-        puntosGeneral + puntosRegularidad + puntosMontaña;
+        puntosGeneral + puntosSprint + puntosMontaña;
 
       puntuaciones[corredor] = {
         tpTotal: totalTP,
         puntosGeneral,
-        puntosRegularidad,
+        puntosSprint,
         puntosMontaña,
         totalPuntosClasificacion,
         totalFinal: totalTP + totalPuntosClasificacion,
@@ -133,7 +137,7 @@ const FinalClassificationTab = ({
   const tiempoTotalEquipoFinal = useMemo(() => {
     const tiempoPorEquipo = {};
     equipos.forEach((equipo) => {
-      const tiemposCorredores = equipo.corredores
+      const tiemposCorredores = [equipo.rodador, equipo.sprinter]
         .map((c) => corredorPuntuacionTotal[c.nombre]?.tiempoTotal || Infinity)
         .sort((a, b) => a - b)
         .slice(0, 2)
@@ -165,8 +169,9 @@ const FinalClassificationTab = ({
   const puntuacionSumaCorredoresEquipo = useMemo(() => {
     const sumaPuntos = {};
     Object.keys(corredorPuntuacionTotal).forEach((corredor) => {
-      const equipoCorredor = equipos.find((eq) =>
-        eq.corredores.some((c) => c.nombre === corredor)
+      const equipoCorredor = equipos.find(
+        (eq) =>
+          eq.rodador.nombre === corredor || eq.sprinter.nombre === corredor
       )?.nombre;
       if (equipoCorredor) {
         if (!sumaPuntos[equipoCorredor]) {
@@ -202,33 +207,60 @@ const FinalClassificationTab = ({
     <div>
       <h2 className="tableTitle">Clasificación Final Individual</h2>
       <table className="classificationTable">
-        <thead>
-          <tr>
-            <th>Posición</th>
-            <th>Corredor</th>
-            {etapas.map((etapa) => (
-              <th key={etapa}>E{etapa.split(" ")[1]}</th>
-            ))}
-            {descansos.map((descanso) => (
-              <th key={descanso}>
-                D{descanso.split(" ")[1]?.split(" - ")[1] || ""}
+        <>
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+              <th
+                colspan={Object.keys(resultadosPorEtapa).length + 1}
+                style={{
+                  borderLeft: "1px solid #ccc",
+                  borderRight: "1px solid #ccc",
+                }}
+              >
+                Etapas
               </th>
-            ))}
-            <th>TP</th>
-            <th>PG</th>
-            <th>PR</th>
-            <th>PM</th>
-            <th>TC</th>
-            <th>TF</th>
-          </tr>
-        </thead>
+              <th
+                colspan="4"
+                style={{
+                  borderLeft: "1px solid #ccc",
+                  borderRight: "1px solid #ccc",
+                }}
+              >
+                Clasificaciones
+              </th>
+              <th>TF</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style={{ textAlign: "left", borderRight: "1px solid #ccc" }}>
+                Corredor
+              </th>
+              {etapas.map((etapa) => (
+                <th key={etapa}>{etapa}</th>
+              ))}
+              {descansos.map((descanso) => (
+                <th key={descanso}>
+                  D{descanso.match(/Descanso (\d+)/)?.[1] || ""}
+                </th>
+              ))}
+              <th style={{ borderRight: "1px solid #ccc" }}>TP</th>
+              <th>PG</th>
+              <th>PR</th>
+              <th>PM</th>
+              <th style={{ borderRight: "1px solid #ccc" }}>TC</th>
+              <th>TF</th>
+            </tr>
+          </thead>
+        </>
         <tbody>
           {corredoresOrdenados.map((corredor, index) => {
             const puntuacion = corredorPuntuacionTotal[corredor];
             return (
               <tr key={corredor}>
                 <td>{index + 1}</td>
-                <td>{corredor}</td>
+                <td style={{ textAlign: "left" }}>{corredor}</td>
                 {etapas.map((etapa) => (
                   <td key={`${corredor}-${etapa}`}>
                     {puntuacion.tpPorEtapa[etapa]}
@@ -241,9 +273,11 @@ const FinalClassificationTab = ({
                 ))}
                 <td className="total-parcial">{puntuacion.tpTotal}</td>
                 <td>{puntuacion.puntosGeneral}</td>
-                <td>{puntuacion.puntosRegularidad}</td>
+                <td>{puntuacion.puntosSprint}</td>
                 <td>{puntuacion.puntosMontaña}</td>
-                <td>{puntuacion.totalPuntosClasificacion}</td>
+                <td className="total-parcial">
+                  {puntuacion.totalPuntosClasificacion}
+                </td>
                 <td className="total-final">{puntuacion.totalFinal}</td>
               </tr>
             );
@@ -255,8 +289,8 @@ const FinalClassificationTab = ({
       <table className="classificationTable">
         <thead>
           <tr>
-            <th>Posición</th>
-            <th>Equipo</th>
+            <th></th>
+            <th style={{ textAlign: "left" }}>Equipo</th>
             <th>Tiempo Equipo</th>
             <th>Equipos</th>
             <th>Corredores</th>
@@ -275,7 +309,7 @@ const FinalClassificationTab = ({
               return (
                 <tr key={nombreEquipo}>
                   <td>{index + 1}</td>
-                  <td>{nombreEquipo}</td>
+                  <td style={{ textAlign: "left" }}>{nombreEquipo}</td>
                   <td>{formatTiempo(sumaTiempoEquipo)}</td>
                   <td>{puntosTiempo}</td>
                   <td>{sumaPuntosCorredores}</td>

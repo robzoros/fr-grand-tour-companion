@@ -1,11 +1,12 @@
 import React from "react";
 import "./TotalClassificationTab.css";
+import { getNombreOVacio } from "../utils/funciones";
 
 function TotalClassificationTab({ clasificacionesTotales, equipos }) {
   const clasificacionEquipos = {};
   equipos.forEach((equipo) => {
     let tiempoTotalEquipo = 0;
-    equipo.corredores.forEach((corredor) => {
+    [equipo.rodador, equipo.sprinter].forEach((corredor) => {
       if (clasificacionesTotales?.general?.[corredor.nombre]?.tiempoTotal) {
         tiempoTotalEquipo +=
           clasificacionesTotales.general[corredor.nombre].tiempoTotal;
@@ -22,38 +23,42 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
     <div className="total-classification-tab">
       <h2>Clasificación</h2>
 
-      <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-        {/* Tabla de Clasificación Individual (General) */}
-        <div>
+      <div className="contenedor-tablas">
+        <div className="tabla">
           <h3>General (Tour)</h3>
           <table>
             <thead>
               <tr>
-                <th>Posición</th>
                 <th></th>
-                <th className="izquierda">Nombre</th>
+                <th className="izquierda">Corredor</th>
                 <th className="izquierda">Equipo</th>
                 <th className="tiempo-total-centered">Tiempo</th>
-                <th>TP</th>
+                <th>🏆</th>
               </tr>
             </thead>
             <tbody>
               {Object.entries(clasificacionesTotales?.general || {}).map(
                 ([nombre, datos], index) => {
-                  const equipoCorredor = equipos.find((equipo) =>
-                    equipo.corredores.some(
-                      (corredor) => corredor.nombre === nombre
-                    )
+                  const equipoCorredor = equipos.find(
+                    (equipo) =>
+                      equipo.rodador.nombre === nombre ||
+                      equipo.sprinter.nombre === nombre
                   );
-                  const corredorInfo = equipoCorredor?.corredores.find(
-                    (c) => c.nombre === nombre
-                  );
+
+                  const corredorInfo =
+                    equipoCorredor?.rodador.nombre === nombre
+                      ? equipoCorredor.rodador
+                      : equipoCorredor?.sprinter.nombre === nombre
+                      ? equipoCorredor.sprinter
+                      : undefined;
+
                   const tiempoTotalFormatted = datos?.tiempoTotal
                     ? `${String(Math.floor(datos.tiempoTotal / 60)).padStart(
                         2,
                         "0"
                       )}:${String(datos.tiempoTotal % 60).padStart(2, "0")}`
                     : "00:00";
+
                   const puntosTourCorredor =
                     clasificacionesTotales?.tour?.[nombre] || 0;
 
@@ -71,20 +76,21 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                               equipoCorredor?.color === "white"
                                 ? "black"
                                 : "white",
-                            display: "flex",
+                            display: "inline-flex",
                             justifyContent: "center",
                             alignItems: "center",
                             fontWeight: "bold",
                             fontSize: "0.9em",
+                            marginRight: "2%",
                           }}
                         >
                           {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
                         </div>
+                        {getNombreOVacio(nombre)}
                       </td>
-                      <td>{nombre}</td>
                       <td>{equipoCorredor?.nombre}</td>
                       <td className="centrada">{tiempoTotalFormatted}</td>
-                      <td className="derecha">{puntosTourCorredor}</td>{" "}
+                      <td className="derecha">{puntosTourCorredor}</td>
                     </tr>
                   );
                 }
@@ -94,12 +100,11 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
         </div>
 
         {/* Tabla de Clasificación por Equipos (sin cambios) */}
-        <div>
+        <div className="tabla">
           <h3>Clasificación por Equipos</h3>
           <table>
             <thead>
               <tr>
-                <th>Posición</th>
                 <th></th>
                 <th className="izquierda">Equipo</th>
                 <th>Tiempo</th>
@@ -131,17 +136,18 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
                             backgroundColor: equipoInfo.color,
                             color:
                               equipoInfo.color === "white" ? "black" : "white",
-                            display: "flex",
+                            display: "inline-flex",
                             justifyContent: "center",
                             alignItems: "center",
                             fontWeight: "bold",
                             fontSize: "0.9em",
+                            marginRight: "2%",
                           }}
                         >
                           T
                         </div>
+                        { getNombreOVacio(nombreEquipo)}
                       </td>
-                      <td>{nombreEquipo}</td>
                       <td className="centrada">
                         {tiempoTotalFormattedEquipos}
                       </td>
@@ -154,110 +160,130 @@ function TotalClassificationTab({ clasificacionesTotales, equipos }) {
         </div>
       </div>
 
-      {/* Tablas de Regularidad y Montaña (sin cambios) */}
-      <h3>Regularidad</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Posición</th>
-            <th></th>
-            <th className="izquierda">Nombre</th>
-            <th className="izquierda">Equipo</th>
-            <th>Puntos</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(clasificacionesTotales?.regularidad || {})
-            .sort(([, a], [, b]) => b - a)
-            .map(([nombre, puntos], index) => {
-              const equipoCorredor = equipos.find((equipo) =>
-                equipo.corredores.some((corredor) => corredor.nombre === nombre)
-              );
-              const corredorInfo = equipoCorredor?.corredores.find(
-                (c) => c.nombre === nombre
-              );
-              return (
-                <tr key={nombre}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <div
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        border: "1px solid black",
-                        backgroundColor: equipoCorredor?.color,
-                        color:
-                          equipoCorredor?.color === "white" ? "black" : "white",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontWeight: "bold",
-                        fontSize: "0.9em",
-                      }}
-                    >
-                      {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
-                    </div>
-                  </td>
-                  <td>{nombre}</td>
-                  <td>{equipoCorredor?.nombre}</td>
-                  <td className="derecha">{puntos}</td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+      <div className="contenedor-tablas">
+        <div className="tabla">
+          <h3>sprint</h3>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th className="izquierda">Corredor</th>
+                <th className="izquierda">Equipo</th>
+                <th>Puntos</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(clasificacionesTotales?.sprint || {})
+                .sort(([, a], [, b]) => b - a)
+                .map(([nombre, puntos], index) => {
+                  const equipoCorredor = equipos.find(
+                    (equipo) =>
+                      equipo.rodador.nombre === nombre ||
+                      equipo.sprinter.nombre === nombre
+                  );
+                  const corredorInfo =
+                    equipoCorredor?.rodador.nombre === nombre
+                      ? equipoCorredor.rodador
+                      : equipoCorredor?.sprinter.nombre === nombre
+                      ? equipoCorredor.sprinter
+                      : undefined;
+                  return (
+                    <tr key={nombre}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <div
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            border: "1px solid black",
+                            backgroundColor: equipoCorredor?.color,
+                            color:
+                              equipoCorredor?.color === "white"
+                                ? "black"
+                                : "white",
+                            display: "inline-flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontWeight: "bold",
+                            fontSize: "0.9em",
+                            marginRight: "2%",
+                          }}
+                        >
+                          {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
+                        </div>
+                        {getNombreOVacio(nombre)}
+                      </td>
+                      <td>{equipoCorredor?.nombre}</td>
+                      <td className="derecha">{puntos}</td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
 
-      <h3>Montaña</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Posición</th>
-            <th></th>
-            <th className="izquierda">Nombre</th>
-            <th className="izquierda">Equipo</th>
-            <th>Puntos</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(clasificacionesTotales?.montaña || {})
-            .sort(([, a], [, b]) => b - a)
-            .map(([nombre, puntos], index) => {
-              const equipoCorredor = equipos.find((equipo) =>
-                equipo.corredores.some((corredor) => corredor.nombre === nombre)
-              );
-              const corredorInfo = equipoCorredor?.corredores.find(
-                (c) => c.nombre === nombre
-              );
-              return (
-                <tr key={nombre}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <div
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        border: "1px solid black",
-                        backgroundColor: equipoCorredor?.color,
-                        color:
-                          equipoCorredor?.color === "white" ? "black" : "white",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontWeight: "bold",
-                        fontSize: "0.9em",
-                      }}
-                    >
-                      {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
-                    </div>
-                  </td>
-                  <td>{nombre}</td>
-                  <td>{equipoCorredor?.nombre}</td>
-                  <td className="derecha">{puntos}</td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+        <div className="tabla">
+          <h3>Montaña</h3>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th className="izquierda">Corredor</th>
+                <th className="izquierda">Equipo</th>
+                <th>Puntos</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.entries(clasificacionesTotales?.montaña || {})
+                .sort(([, a], [, b]) => b - a)
+                .map(([nombre, puntos], index) => {
+                  const equipoCorredor = equipos.find(
+                    (equipo) =>
+                      equipo.rodador.nombre === nombre ||
+                      equipo.sprinter.nombre === nombre
+                  );
+                  const corredorInfo =
+                    equipoCorredor?.rodador.nombre === nombre
+                      ? equipoCorredor.rodador
+                      : equipoCorredor?.sprinter.nombre === nombre
+                      ? equipoCorredor.sprinter
+                      : undefined;
+
+                  return (
+                    <tr key={nombre}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <div
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            border: "1px solid black",
+                            backgroundColor: equipoCorredor?.color,
+                            color:
+                              equipoCorredor?.color === "white"
+                                ? "black"
+                                : "white",
+                            display: "inline-flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontWeight: "bold",
+                            fontSize: "0.9em",
+                            marginRight: "2%",
+                          }}
+                        >
+                          {corredorInfo?.tipo === "sprinter" ? "S" : "R"}
+                        </div>
+                        {getNombreOVacio(nombre)}
+                      </td>
+                      <td>{equipoCorredor?.nombre}</td>
+                      <td className="derecha">{puntos}</td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

@@ -10,8 +10,8 @@
   text-align: center;
 }
 
-.total-classification-tab > div {
-  margin-bottom: 20px; /* Espacio entre las diferentes clasificaciones */
+.total-classification-tab > div:not(.contenedor-tablas) {
+  margin-bottom: 20px;
 }
 
 .total-classification-tab > div:last-child {
@@ -65,4 +65,24 @@ td.derecha {
 
 .tiempo-total-centered {
   text-align: center; /* Asegúrate de que esta clase esté definida si la usas */
+}
+
+.contenedor-tablas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.tabla {
+  flex: 1 1 100%;
+  max-width: 100%;
+}
+
+
+@media (min-width: 768px) {
+  .tabla {
+    flex: 1 1 50%;
+    max-width: 48%;
+  }
 }

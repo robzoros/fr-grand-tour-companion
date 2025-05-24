@@ -21,6 +21,7 @@
 .classificationTable th,
 .classificationTable td {
   padding: 12px 15px;
+  text-align: center;
 }
 
 .total-parcial {
@@ -54,3 +55,5 @@
   margin-bottom: 10px;
   color: #333;
 }
+
+
